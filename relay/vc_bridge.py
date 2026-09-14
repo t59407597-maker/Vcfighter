@@ -70,7 +70,7 @@ class VCBridge:
             state.target_chat_id = target_chat_id
 
             if not self._started:
-                self.calls.start()
+                await self.calls.start()
                 self._started = True
 
             await self.calls.play(
