@@ -1,29 +1,32 @@
-# VCFighter Railway Relay
+# VCFighter — Railway VC Fight Player
 
-Telegram Voice Chat relay using Pyrogram and PyTgCalls.
+## What it does
+
+1. `/join <group_id>` → user account joins/gets ready for that group's active Voice Chat.
+2. Reply to a Telegram audio/voice message and send `/fight`.
+3. The replied audio is downloaded and repeatedly played into the joined VC.
+4. `/fightstop` stops the audio but keeps the account in VC.
+5. `/leave` stops everything and leaves VC.
+
+The bot also sends a startup message to `CONTROL_GROUP_ID`. `/ping`, `/help`, `/status` work in private chat and the configured control group.
 
 ## Railway variables
-Set:
+
 - `API_ID`
 - `API_HASH`
 - `SESSION_STRING`
 - `CONTROL_GROUP_ID`
-- `DEFAULT_VOLUME` (optional, default `1.0`)
+
+`CONTROL_GROUP_ID` is only used for the startup notification and command access. The actual VC target is supplied with `/join`.
 
 ## Commands
-Commands now respond in both the configured control group and the private chat:
 
-- `/help`
-- `/ping`
-- `/connect <target_group_id>`
-- `/join <target_group_id>`
-- `/start <target_group_id>`
-- `/stop`
-- `/leave`
-- `/volume <0-300>`
+- `/join -1001234567890`
+- `/fight` — reply to audio/voice
+- `/fightstop`
 - `/status`
-
-Example:
-`/connect -1001234567890`
+- `/leave`
+- `/ping`
+- `/help`
 
 Do not commit Telegram credentials or session strings to GitHub.
