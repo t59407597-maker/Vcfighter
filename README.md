@@ -1,16 +1,29 @@
 # VCFighter Railway Relay
 
-Telegram Voice Chat audio relay using Pyrogram and modern PyTgCalls.
+Telegram Voice Chat relay using Pyrogram and PyTgCalls.
 
-## Railway Variables
-Set `API_ID`, `API_HASH`, `SESSION_STRING`, and `CONTROL_GROUP_ID`.
-`DEFAULT_VOLUME` is optional and defaults to `1.0`.
-
-Do not commit Telegram credentials or session strings to GitHub.
+## Railway variables
+Set:
+- `API_ID`
+- `API_HASH`
+- `SESSION_STRING`
+- `CONTROL_GROUP_ID`
+- `DEFAULT_VOLUME` (optional, default `1.0`)
 
 ## Commands
-`/connect <target_group_id>`
-`/volume <0-300>`
-`/stop`
+Commands now respond in both the configured control group and the private chat:
 
-Python 3.11 is pinned in `.python-version`.
+- `/help`
+- `/ping`
+- `/connect <target_group_id>`
+- `/join <target_group_id>`
+- `/start <target_group_id>`
+- `/stop`
+- `/leave`
+- `/volume <0-300>`
+- `/status`
+
+Example:
+`/connect -1001234567890`
+
+Do not commit Telegram credentials or session strings to GitHub.
