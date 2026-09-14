@@ -1,4 +1,20 @@
 from pyrogram import Client, errors
+import pyrogram.raw.types as pyrogram_raw_types
+
+# PyTgCalls 2.3.3 imports Telegram's inputGroupCallSlug constructor.
+# Some Pyrogram-compatible forks do not expose this newer raw type.
+# The relay only uses normal group voice-chat calls, so provide a minimal
+# compatibility class so PyTgCalls can import successfully.
+if not hasattr(pyrogram_raw_types, "InputGroupCallSlug"):
+    class InputGroupCallSlug:
+        def __init__(self, slug: str):
+            self.slug = slug
+
+        def __repr__(self):
+            return f"InputGroupCallSlug(slug={self.slug!r})"
+
+    pyrogram_raw_types.InputGroupCallSlug = InputGroupCallSlug
+
 import pyrogram.errors as pyrogram_errors
 
 # PyTgCalls 2.3.3 expects newer Telegram raw types than official Pyrogram 2.0.106.
