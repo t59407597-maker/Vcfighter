@@ -1,11 +1,23 @@
 from pyrogram import Client, errors
 import pyrogram.errors as pyrogram_errors
 
-# py-tgcalls 2.3.3 imports the legacy spelling `GroupcallForbidden`,
-# while Pyrogram 2.0.106 exposes `GroupCallForbidden`.
-# Provide the compatibility alias before PyTgCalls is imported.
-if not hasattr(pyrogram_errors, "GroupcallForbidden") and hasattr(pyrogram_errors, "GroupCallForbidden"):
-    pyrogram_errors.GroupcallForbidden = pyrogram_errors.GroupCallForbidden
+# Compatibility layer: py-tgcalls imports these legacy Pyrogram names.
+# Define them BEFORE relay.commands imports PyTgCalls.
+if not hasattr(pyrogram_errors, "GroupcallForbidden"):
+    if hasattr(pyrogram_errors, "GroupCallForbidden"):
+        pyrogram_errors.GroupcallForbidden = pyrogram_errors.GroupCallForbidden
+    else:
+        class GroupcallForbidden(pyrogram_errors.BadRequest):
+            pass
+        pyrogram_errors.GroupcallForbidden = GroupcallForbidden
+
+if not hasattr(pyrogram_errors, "GroupcallInvalid"):
+    if hasattr(pyrogram_errors, "GroupCallInvalid"):
+        pyrogram_errors.GroupcallInvalid = pyrogram_errors.GroupCallInvalid
+    else:
+        class GroupcallInvalid(pyrogram_errors.BadRequest):
+            pass
+        pyrogram_errors.GroupcallInvalid = GroupcallInvalid
 
 from config import API_HASH, API_ID, SESSION_NAME, SESSION_STRING
 from relay.commands import register
