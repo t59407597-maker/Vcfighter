@@ -1,3 +1,3 @@
-control_chat_id = None
 target_chat_id = None
-volume = 1.0
+fight_file = None
+fight_running = False
