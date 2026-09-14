@@ -1,6 +1,9 @@
 from pyrogram import Client, errors
 import pyrogram.errors as pyrogram_errors
 
+# PyTgCalls 2.3.3 expects newer Telegram raw types than official Pyrogram 2.0.106.
+# Pyrofork provides the compatible pyrogram import namespace and raw TL types.
+
 # Compatibility layer: py-tgcalls imports these legacy Pyrogram names.
 # Define them BEFORE relay.commands imports PyTgCalls.
 if not hasattr(pyrogram_errors, "GroupcallForbidden"):
