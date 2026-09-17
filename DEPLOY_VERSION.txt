@@ -1,3 +1,2 @@
-VCFIGHTER v10 FINAL
-ALLVC scans using the original Pyrogram client: self.app.get_dialogs().
-This build must print v10-final at startup.
+VCFIGHTER v11-enum-fix
+ALLVC fixes Pyrogram 2.x ChatType enum filtering.

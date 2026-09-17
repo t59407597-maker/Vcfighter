@@ -33,3 +33,10 @@ Fight playback uses the exact recorded audio supplied by the user; it does not s
 
 
 V6 compatibility: PyTgCalls `.app` compatibility alias and active-VC-only join/play behavior.
+
+## Single-VC fight flow (v12)
+
+- `/join <group_id>` selects and joins that group's active voice chat.
+- Reply to an audio/voice message with `/fight` in the same group. The recorded audio is played repeatedly in the selected VC.
+- `/fightstop` stops the fight audio while keeping the account connected to the VC.
+- `/leave` and `/allvc leave` keep their existing behavior.

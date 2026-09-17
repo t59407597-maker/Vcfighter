@@ -1,4 +1,4 @@
-VCFIGHTER_SOURCE_VERSION = "v10-final"
+VCFIGHTER_SOURCE_VERSION = "v12-single-vc-fight"
 from pyrogram import Client, errors, idle
 import pyrogram.raw.types as pyrogram_raw_types
 
