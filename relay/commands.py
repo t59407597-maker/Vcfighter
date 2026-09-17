@@ -211,7 +211,7 @@ def register(app):
             await message.reply_text("🔕 Automatic reactions OFF.")
 
     # Watch every group where the session receives messages; no /join is needed.
-    @app.on_message(filters.incoming & (filters.group | filters.supergroup))
+    @app.on_message(filters.incoming & filters.group)
     async def automatic_reaction_handler(_, message):
         await _schedule_reaction(message)
 
