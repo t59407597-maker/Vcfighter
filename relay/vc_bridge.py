@@ -18,6 +18,12 @@ class VCBridge:
         # expose it as `.app` in the installed API version.
         self.app = app
         self.calls = PyTgCalls(app)
+        # Compatibility alias for code/wrappers that expect PyTgCalls.app.
+        # ALLVC itself always uses self.app.get_dialogs().
+        try:
+            self.calls.app = app
+        except Exception:
+            pass
         self._started = False
         self._fight_task = None
         self._lock = asyncio.Lock()
