@@ -1,0 +1,3 @@
+VCFighter v7
+ALLVC_FIX: join_all_from_dialogs uses self.app.get_dialogs(), never self.calls.app.
+Deploy this exact repository to Railway.
