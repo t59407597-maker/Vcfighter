@@ -18,11 +18,6 @@ class VCBridge:
         # expose it as `.app` in the installed API version.
         self.app = app
         self.calls = PyTgCalls(app)
-        # Compatibility alias for wrappers/integrations that still access
-        # the underlying Pyrogram client as `PyTgCalls.app`.
-        # Current PyTgCalls internally uses `_app`, so this is harmless and
-        # prevents AttributeError with older compatibility code.
-        self.calls.app = app
         self._started = False
         self._fight_task = None
         self._lock = asyncio.Lock()
@@ -67,6 +62,7 @@ class VCBridge:
         async with self._lock:
             await self._ensure_started()
             ok, failed = [], []
+            # IMPORTANT: use the original Pyrogram client, never self.calls.app.
             async for dialog in self.app.get_dialogs():
                 chat = dialog.chat
                 if not chat or chat.type not in ("group", "supergroup"):
