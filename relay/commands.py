@@ -145,6 +145,7 @@ def register(app):
         action = message.command[1].lower()
         status = await message.reply_text("⏳ Saare group VCs scan karke join kar raha hoon…" if action == "join" else "⏳ Sabhi VCs se leave kar raha hoon…")
         try:
+            log.info("ALLVC v9-final handler active; bridge=%s", type(bridge).__name__)
             if action == "join":
                 ok, failed = await bridge.join_all_from_dialogs()
                 text = f"✅ **ALL VC JOIN DONE**\nJoined: `{len(ok)}`\nFailed/No active VC: `{len(failed)}`"
