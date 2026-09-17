@@ -1,4 +1,4 @@
-VCFIGHTER_SOURCE_VERSION = "v8"
+VCFIGHTER_SOURCE_VERSION = "v9-final"
 from pyrogram import Client, errors, idle
 import pyrogram.raw.types as pyrogram_raw_types
 
@@ -27,6 +27,15 @@ if not hasattr(pyrogram_errors, "GroupcallInvalid"):
         class GroupcallInvalid(pyrogram_errors.BadRequest):
             pass
         pyrogram_errors.GroupcallInvalid = GroupcallInvalid
+
+# PyTgCalls compatibility: older bridge code may access PyTgCalls.app.
+# py-tgcalls 2.x keeps the original Pyrogram client internally as _mtproto.
+try:
+    from pytgcalls import PyTgCalls
+    if not hasattr(PyTgCalls, "app"):
+        PyTgCalls.app = property(lambda self: getattr(self, "_mtproto", None))
+except Exception as _compat_exc:
+    print(f"⚠️ PyTgCalls compatibility patch skipped: {_compat_exc}", flush=True)
 
 from config import API_HASH, API_ID, SESSION_NAME, SESSION_STRING
 from relay.commands import register

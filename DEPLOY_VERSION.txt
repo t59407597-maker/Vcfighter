@@ -1,3 +1,4 @@
-VCFIGHTER V8
-ALLVC FIX: join_all_from_dialogs uses self.app.get_dialogs(), never self.calls.app.
-Runtime prints vc_bridge.py SHA256 and absolute path so the deployed source can be verified.
+VCFighter v9-final
+ALLVC uses self.app.get_dialogs().
+Global PyTgCalls.app compatibility property is installed before relay.commands import.
+Runtime marker: ALLVC v9-final handler active.
