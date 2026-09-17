@@ -3,6 +3,7 @@ import logging
 import os
 
 from pytgcalls import PyTgCalls
+from pytgcalls.types import GroupCallConfig
 
 from relay import state
 
@@ -17,6 +18,11 @@ class VCBridge:
         # expose it as `.app` in the installed API version.
         self.app = app
         self.calls = PyTgCalls(app)
+        # Compatibility alias for wrappers/integrations that still access
+        # the underlying Pyrogram client as `PyTgCalls.app`.
+        # Current PyTgCalls internally uses `_app`, so this is harmless and
+        # prevents AttributeError with older compatibility code.
+        self.calls.app = app
         self._started = False
         self._fight_task = None
         self._lock = asyncio.Lock()
@@ -47,7 +53,7 @@ class VCBridge:
         """Join a VC with no audible media. PyTgCalls accepts stream=None."""
         async with self._lock:
             await self._ensure_started()
-            await self.calls.play(chat_id, None)
+            await self.calls.play(chat_id, None, config=GroupCallConfig(auto_start=False))
             state.joined_chat_ids.add(chat_id)
             state.current_chat_id = chat_id
             state.target_chat_id = chat_id
@@ -67,7 +73,7 @@ class VCBridge:
                     continue
                 chat_id = chat.id
                 try:
-                    await self.calls.play(chat_id, None)
+                    await self.calls.play(chat_id, None, config=GroupCallConfig(auto_start=False))
                     state.joined_chat_ids.add(chat_id)
                     ok.append(chat_id)
                 except Exception as exc:
@@ -133,7 +139,7 @@ class VCBridge:
                 if not os.path.exists(path):
                     raise FileNotFoundError(path)
                 duration = await self._duration(path)
-                await self.calls.play(target, path)
+                await self.calls.play(target, path, config=GroupCallConfig(auto_start=False))
                 await asyncio.sleep(max(1.0, duration - 0.25))
         except asyncio.CancelledError:
             raise
