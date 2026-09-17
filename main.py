@@ -1,3 +1,4 @@
+VCFIGHTER_SOURCE_VERSION = "v5"
 from pyrogram import Client, errors, idle
 import pyrogram.raw.types as pyrogram_raw_types
 
@@ -39,7 +40,7 @@ register(app)
 
 async def startup():
     await app.start()
-    print("🔊 VC Fighter started", flush=True)
+    print(f"🔊 VC Fighter started ({VCFIGHTER_SOURCE_VERSION})", flush=True)
     # No fixed CONTROL_GROUP_ID is required. Commands are handled dynamically.
     await idle()
     await app.stop()
