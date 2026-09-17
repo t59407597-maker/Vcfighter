@@ -1,4 +1,3 @@
-VCFighter v9-final
-ALLVC uses self.app.get_dialogs().
-Global PyTgCalls.app compatibility property is installed before relay.commands import.
-Runtime marker: ALLVC v9-final handler active.
+VCFIGHTER v10 FINAL
+ALLVC scans using the original Pyrogram client: self.app.get_dialogs().
+This build must print v10-final at startup.
