@@ -4,6 +4,7 @@ import os
 
 from pytgcalls import PyTgCalls
 from pytgcalls.types import GroupCallConfig
+from pyrogram.enums import ChatType
 
 from relay import state
 
@@ -64,26 +65,46 @@ class VCBridge:
         return await self.join_all_from_dialogs()
 
     async def join_all_from_dialogs(self):
-        """Scan the session account's joined group dialogs and try each active VC."""
+        """Scan all user-session group dialogs and join every currently active VC."""
         async with self._lock:
             await self._ensure_started()
             ok, failed = [], []
-            # IMPORTANT: use the original Pyrogram client, never self.calls.app.
+            scanned = 0
+            skipped = 0
+
+            # Pyrogram 2.x uses ChatType enums, not plain string constants.
+            # Comparing chat.type to ("group", "supergroup") silently skipped
+            # every group, which produced Joined: 0 / Failed: 0.
             async for dialog in self.app.get_dialogs():
                 chat = dialog.chat
-                if not chat or chat.type not in ("group", "supergroup"):
+                if not chat:
                     continue
+                chat_type = getattr(chat.type, "value", chat.type)
+                if chat_type not in (ChatType.GROUP.value, ChatType.SUPERGROUP.value):
+                    continue
+
+                scanned += 1
                 chat_id = chat.id
                 try:
-                    await self.calls.play(chat_id, None, config=GroupCallConfig(auto_start=False))
+                    # auto_start=False means: join only if a VC is already active;
+                    # do not create/start a new VC.
+                    await self.calls.play(
+                        chat_id,
+                        None,
+                        config=GroupCallConfig(auto_start=False),
+                    )
                     state.joined_chat_ids.add(chat_id)
                     ok.append(chat_id)
+                    log.info("ALLVC joined active VC: %s (%s)", chat_id, getattr(chat, "title", ""))
                 except Exception as exc:
                     failed.append((chat_id, exc))
-                    log.warning("Skipping VC %s: %s", chat_id, exc)
+                    log.info("ALLVC skipped %s (%s): %s", chat_id, getattr(chat, "title", ""), exc)
+
             if ok:
                 state.current_chat_id = ok[-1]
                 state.target_chat_id = ok[-1]
+
+            log.info("ALLVC scan complete: groups=%s joined=%s failed=%s", scanned, len(ok), len(failed))
             return ok, failed
 
     async def remove_and_leave(self, chat_id: int):
@@ -173,7 +194,17 @@ class VCBridge:
                 pass
 
     async def stop_fight(self):
+        """Stop fight audio but keep the account inside the selected VC."""
         async with self._lock:
+            target = state.current_chat_id
+            # Pause the active stream first. Unlike leave_call(), this keeps
+            # the user account connected to the voice chat. PyTgCalls 2.3.x
+            # exposes pause() for stopping media without leaving the call.
+            if target is not None:
+                try:
+                    await self.calls.pause(target)
+                except Exception as exc:
+                    log.info("Fight stream was not active/pause unavailable for %s: %s", target, exc)
             await self._cancel_fight_unlocked()
             state.fight_file = None
 

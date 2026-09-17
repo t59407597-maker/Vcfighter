@@ -159,7 +159,12 @@ def register(app):
     @app.on_message(filters.command("fight") & allowed)
     async def fight_cmd(_, message):
         if not state.current_chat_id:
-            return await message.reply_text("❌ Pehle `/join <group_id>` ya `/allvc join` karo.")
+            return await message.reply_text("❌ Pehle `/join <group_id>` karke VC join karo.")
+        if message.chat and message.chat.id != state.current_chat_id:
+            return await message.reply_text(
+                "❌ Fighting sirf selected VC wale group me chalegi.\n\n"
+                f"Selected group: `{state.current_chat_id}`"
+            )
         replied = message.reply_to_message
         if not _is_audio(replied):
             return await message.reply_text("❌ `/fight` ko audio/voice message ke reply me bhejo.")
@@ -170,7 +175,10 @@ def register(app):
             path = os.path.join(DOWNLOAD_DIR, f"fight_{uuid.uuid4().hex}{ext}")
             await replied.download(file_name=path)
             await bridge.fight(path, state.current_chat_id)
-            await status.edit_text("🔥 **FIGHT started**\nRecorded audio VC me repeat play hoga. `/fightstop` se stop karo.")
+            await status.edit_text(
+                "🔥 **FIGHT started**\n"
+                "Ye audio isi joined VC me repeat hoga. `/fightstop` se audio stop hoga, account VC me rahega."
+            )
         except Exception as exc:
             if path and os.path.exists(path):
                 try: os.remove(path)
@@ -182,7 +190,7 @@ def register(app):
     async def fightstop_cmd(_, message):
         try:
             await bridge.stop_fight()
-            await message.reply_text("🛑 Fight audio stopped. VC me account bana hua hai.")
+            await message.reply_text("🛑 **Fight audio stopped.** Account VC me connected hai.")
         except Exception as exc:
             await message.reply_text(f"❌ Stop failed: `{type(exc).__name__}: {exc}`")
 
