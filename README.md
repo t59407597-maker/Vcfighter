@@ -30,3 +30,6 @@ The app uses a Pyrogram user session, not a BotFather bot token.
 - `/name Rexxxxxxxxy` — normalizes repeated letters to `rexy` for safe audio labels.
 
 Fight playback uses the exact recorded audio supplied by the user; it does not synthesize or generate new spoken content.
+
+
+V6 compatibility: PyTgCalls `.app` compatibility alias and active-VC-only join/play behavior.
