@@ -1,4 +1,6 @@
 FROM python:3.11-slim
+ARG VCFIGHTER_BUILD=V8-ALLVC-FIX
+RUN echo "Building $VCFIGHTER_BUILD"
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ffmpeg \

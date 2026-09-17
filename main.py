@@ -1,4 +1,4 @@
-VCFIGHTER_SOURCE_VERSION = "v7"
+VCFIGHTER_SOURCE_VERSION = "v8"
 from pyrogram import Client, errors, idle
 import pyrogram.raw.types as pyrogram_raw_types
 
@@ -40,7 +40,13 @@ register(app)
 
 async def startup():
     await app.start()
+    import hashlib
+    from pathlib import Path
+    bridge_file = Path(__file__).resolve().parent / "relay" / "vc_bridge.py"
+    bridge_sha = hashlib.sha256(bridge_file.read_bytes()).hexdigest()[:12]
     print(f"🔊 VC Fighter started ({VCFIGHTER_SOURCE_VERSION})", flush=True)
+    print(f"🧩 vc_bridge.py SHA256: {bridge_sha}", flush=True)
+    print(f"🧩 vc_bridge.py path: {bridge_file}", flush=True)
     # No fixed CONTROL_GROUP_ID is required. Commands are handled dynamically.
     await idle()
     await app.stop()

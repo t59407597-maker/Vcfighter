@@ -1,3 +1,3 @@
-VCFighter v7
-ALLVC_FIX: join_all_from_dialogs uses self.app.get_dialogs(), never self.calls.app.
-Deploy this exact repository to Railway.
+VCFIGHTER V8
+ALLVC FIX: join_all_from_dialogs uses self.app.get_dialogs(), never self.calls.app.
+Runtime prints vc_bridge.py SHA256 and absolute path so the deployed source can be verified.
