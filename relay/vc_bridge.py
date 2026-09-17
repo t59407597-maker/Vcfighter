@@ -13,6 +13,9 @@ class VCBridge:
     """Manage multiple Telegram voice chats with one PyTgCalls client."""
 
     def __init__(self, app):
+        # Keep the original Pyrogram client separately. PyTgCalls does not
+        # expose it as `.app` in the installed API version.
+        self.app = app
         self.calls = PyTgCalls(app)
         self._started = False
         self._fight_task = None
@@ -58,7 +61,7 @@ class VCBridge:
         async with self._lock:
             await self._ensure_started()
             ok, failed = [], []
-            async for dialog in self.calls.app.get_dialogs():
+            async for dialog in self.app.get_dialogs():
                 chat = dialog.chat
                 if not chat or chat.type not in ("group", "supergroup"):
                     continue
