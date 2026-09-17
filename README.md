@@ -1,32 +1,32 @@
-# VCFighter — Railway VC Fight Player
+# VCFighter — Railway VC Player
 
-## What it does
-
-1. `/join <group_id>` → user account joins/gets ready for that group's active Voice Chat.
-2. Reply to a Telegram audio/voice message and send `/fight`.
-3. The replied audio is downloaded and repeatedly played into the joined VC.
-4. `/fightstop` stops the audio but keeps the account in VC.
-5. `/leave` stops everything and leaves VC.
-
-The bot also sends a startup message to `CONTROL_GROUP_ID`. `/ping`, `/help`, `/status` work in private chat and the configured control group.
+## Features
+- `/allvc join` scans the session account's joined groups and attempts to join every active Voice Chat; no group IDs are required.
+- `/allvc leave` leaves all VCs joined by the session.
+- `/join <group_id>` joins one specific VC.
+- Reply to an audio/voice message and use `/fight` to repeat the recorded audio in the selected VC.
+- `/fightstop` stops playback while keeping the account in the VC.
+- Automatic group reactions: first-seen users are scheduled for 30 minutes; users already seen in the running process are scheduled for 1 hour.
 
 ## Railway variables
-
 - `API_ID`
 - `API_HASH`
 - `SESSION_STRING`
-- `CONTROL_GROUP_ID`
+- `NEW_USER_REACTION_DELAY=1800`
+- `OLD_USER_REACTION_DELAY=3600`
 
-`CONTROL_GROUP_ID` is only used for the startup notification and command access. The actual VC target is supplied with `/join`.
+The app uses a Pyrogram user session, not a BotFather bot token.
 
 ## Commands
-
-- `/join -1001234567890`
+- `/allvc join`
+- `/allvc leave`
+- `/join <group_id>`
 - `/fight` — reply to audio/voice
 - `/fightstop`
 - `/status`
-- `/leave`
-- `/ping`
-- `/help`
+- `/leave [group_id]`
+- `/reaction on`
+- `/reaction off`
+- `/name Rexxxxxxxxy` — normalizes repeated letters to `rexy` for safe audio labels.
 
-Do not commit Telegram credentials or session strings to GitHub.
+Fight playback uses the exact recorded audio supplied by the user; it does not synthesize or generate new spoken content.
